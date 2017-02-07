@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book Add Form</title>
+  <title>Book Modify Form</title>
 <!-- BOOTSTRAP STYLES-->
   <link href="/assets/css/bootstrap.css" rel="stylesheet" />
    <!-- FONTAWESOME STYLES-->
@@ -35,7 +35,7 @@
                    </ul>
                 </div> -->
 
-		            <div class="navbar-collapse collapse">
+				        <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/home">HOME</a></li>
                         <li><a href="#">사이트맵</a></li>
@@ -90,39 +90,44 @@
                         </ul>
                     </li>
                 </ul>
-			  </div>
+			</div>
         </nav>
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                    <center><h2>도서등록</h2></center>
+                    <center><h2>도서정보수정</h2></center>
                     </div>
                 </div>
                 <br/><br/>
-
 				<div class="container">
-				  <form class="form-horizontal" role="form" action="/bookAdd" method='post'>
+				  <form class="form-horizontal" role="form" action="/bookModify" method='post'>
 				    <fieldset>
+              <div class="form-group">
+				        <label class="col-sm-3 control-label" for="booksNumber">도서번호</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" value="<%=books[0].booksNumber%>" readonly="readonly" name="booksNumber" id="booksNumber" />
+				        </div>
+				      </div>
 			        <div class="form-group">
 				        <label class="col-sm-3 control-label" for="booksName">도서명</label>
 				        <div class="col-sm-7">
-				          <input type="text" class="form-control" name="booksName" id="booksName" placeholder="도서명을 입력하세요">
+				          <input type="text" class="form-control" value="<%=books[0].booksName%>" name="booksName" id="booksName" placeholder="도서명을 입력하세요">
 				        </div>
 				      </div>
 				      <div class="form-group">
 				        <label class="col-sm-3 control-label" for="booksMade">출판사</label>
 				        <div class="col-sm-7">
-				          <input type="text" class="form-control" name="booksMade" id="booksMade" placeholder="출판사를 입력하세요">
+				          <input type="text" class="form-control" value="<%=books[0].booksMade%>" name="booksMade" id="booksMade" placeholder="출판사를 입력하세요">
 				        </div>
 				      </div>
 				      <div class="form-group">
-				        <label class="col-sm-3 control-label" for="bookskindsNumber">도서분류</label>
+				        <label class="col-sm-3 control-label" for="bookskind">도서분류</label>
 				        <div class="col-sm-7">
 				          <div class="row">
 				            <div class="col-xs-3">
-				              <select class="form-control col-sm-2" name="bookskindsNumber" id="bookskindsNumber">
+				              <select class="form-control col-sm-2" name="bookskind" id="bookskind">
 				                <option>--분류--</option>
                         <% for(var k in bookskind){%>
 				                <option value="<%=bookskind[k].bookskindsNumber%>"><%=bookskind[k].bookskindsname%></option>
@@ -135,13 +140,13 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="booksAuthor">저자</label>
 							<div class="col-sm-7">
-							  <input type="text" class="form-control" name="booksAuthor" id="booksAuthor" placeholder="출판사를 입력하세요"/>
+							  <input type="text" class="form-control" value="<%=books[0].booksAuthor%>" name="booksAuthor" id="booksAuthor" placeholder="출판사를 입력하세요"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="firstRentDay">최초대여일</label>
 							<div class="col-sm-7">
-							  <input type="date" class="form-control" name="firstRentDay" id="firstRentDay"/>
+							  <input type="date" class="form-control" value="<%=books[0].firstRentDay%>" name="firstRentDay" id="firstRentDay"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -158,13 +163,13 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="booksLendingDay">대여일수</label>
 							<div class="col-sm-7">
-							  <input type="text" class="form-control" name="booksLendingDay" id="booksLendingDay" placeholder="총대여일수를 입력하세요"/>
+							  <input type="text" class="form-control" value="<%=books[0].booksLendingPossible%>" name="booksLendingDay" id="booksLendingDay" placeholder="총대여일수를 입력하세요"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="booksLendingCount">대여횟수</label>
 							<div class="col-sm-7">
-							  <input type="text" class="form-control" name="booksLendingCount" id="booksLendingCount" placeholder="총대여횟수를 입력하세요"/>
+							  <input type="text" class="form-control" value="<%=books[0].booksLendingCount%>" name="booksLendingCount" id="booksLendingCount" placeholder="총대여횟수를 입력하세요"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -185,14 +190,14 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label" for="libraryNumber">도서관분류</label>
+							<label class="col-sm-3 control-label" for="bookskind">도서분류</label>
 					        <div class="col-sm-9">
 					          <div class="row">
 					        	<div class="col-xs-3">
 					              <select class="form-control" name="libraryNumber">
                           <option>--도서관선택--</option>
-                          <% for(var l in libraryResult) {%>
-					              	<option value="<%=libraryResult[l].libraryNumber%>"><%=libraryResult[l].libraryName%></option>
+                          <% for(var l in librResult) {%>
+					              	<option value="<%=librResult[l].libraryNumber%>"><%=librResult[l].libraryName%></option>
                           <%}%>
                         </select>
 					            </div>
@@ -201,8 +206,7 @@
 				      </div>
               <div class="form-group">
 				        <div class="col-sm-offset-3 col-sm-9">
-				          <input type="submit" class="btn btn-success" value="등록"/>
-				          <input type="reset" class="btn btn-success" value="다시입력"/>
+				          <input type="submit" class="btn btn-success" value="수정"/>
 				        </div>
 				      </div>
 				    </fieldset>

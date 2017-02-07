@@ -26,15 +26,23 @@
                     </button>
                 </div>
                 <a class="navbar-brand" href="#"><i class="fa fa-square-o "></i>&nbsp;Library</a>
+<!--
+                <div class="navbar-collapse collapse">
+                   <ul class="nav navbar-nav navbar-right">
+							<li>ID<input type="text" name="adminId"/></li>
+							<li>PW<input type="text" name="adminPw"/></li>
+							<li><input type="submit" value="로그인"/></li>
+                   </ul>
+                </div> -->
 
-                  <div class="navbar-collapse collapse">
+				        <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/home">HOME</a></li>
+                        <li><a href="/">HOME</a></li>
                         <li><a href="#">사이트맵</a></li>
                         <li><a href="/admin/logout">로그아웃</a></li>
                     </ul>
-                  </div>
-              </div>
+                </div>
+            </div>
         </div>
         <!-- /. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
@@ -42,6 +50,7 @@
                 <ul class="nav" id="main-menu">
                     <li class="text-center user-image-back">
         				        <img src="/assets/img/book2.jpg" width="250px" height="128px" />
+
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-edit "></i>도서관리<span class="fa arrow"></span></a>
@@ -68,6 +77,7 @@
                             </li>
                         </ul>
                     </li>
+
                     <li>
                         <a href="#"><i class="fa fa-sitemap "></i>회원관리<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -80,27 +90,38 @@
                         </ul>
                     </li>
                 </ul>
-			      </div>
+			</div>
         </nav>
-
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Home</h2>
+                     <h2>도서목록</h2>
                     </div>
                 </div>
-                 <!-- /. ROW  -->
                 <hr />
-                <img src="/assets/img/books.jpg" width="1200px" height="200px" align="center"/>
-                <br/><br/>
-                <center><span style=" font: bold 1.5em/1em Georgia, serif ; color: black;">
-                  "책은 마음의 양식이다."<br/><br/>저희 도서관시스템을 방문해주셔서 감사합니다.
-                </span>
-                </center>
-                 <!-- /. ROW  -->
-    		</div>
+                <div class='container'>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>도서번호</th>
+                          <th>도서명</th>
+                          <th>저자</th>
+                          <th>출판사</th>
+                        </tr>
+                      <tbody>
+                        <% for(var b in bookslist) {%>
+                        <tr>
+                          <td><%= bookslist[b].booksNumber %></td>
+                          <td><a href="/bookModify/<%=bookslist[b].booksNumber%>"><%= bookslist[b].booksName %></a></td>
+                          <td><%= bookslist[b].booksAuthor %></td>
+                          <td><%= bookslist[b].booksMade %></td>
+                        </tr>
+                        <%}%>
+                      </tbody>
+                </div>
+    		    </div>
              <!-- /. PAGE INNER  -->
         </div>
         <!-- /. PAGE WRAPPER  -->
