@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Bootstrap Admin Template : Two Page</title>
+  <title>Book RentAdd Form</title>
 <!-- BOOTSTRAP STYLES-->
   <link href="/assets/css/bootstrap.css" rel="stylesheet" />
    <!-- FONTAWESOME STYLES-->
@@ -27,21 +27,17 @@
                 </div>
                 <a class="navbar-brand" href="#"><i class="fa fa-square-o "></i>&nbsp;Library</a>
 
-                <!--
-                  <div class="navbar-collapse collapse">
-                    <form action="/admin/login" method="post">
-                     <ul class="nav navbar-nav navbar-right">
-                      <li>ID<input type="text" name="adminId"/></li>
-                      <li>PW<input type="text" name="adminPw"/></li>
-                      <li><input type="submit" value="로그인"/></li>
-                     </ul>
-                   </form>
-                 </div>
-                -->
+                <!-- <div class="navbar-collapse collapse">
+                   <ul class="nav navbar-nav navbar-right">
+							<li>ID<input type="text" name="adminId"/></li>
+							<li>PW<input type="text" name="adminPw"/></li>
+							<li><input type="submit" value="로그인"/></li>
+                   </ul>
+                </div> -->
 
 				        <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/">HOME</a></li>
+                        <li><a href="/home">HOME</a></li>
                         <li><a href="#">사이트맵</a></li>
                         <li><a href="/admin/logout">로그아웃</a></li>
                     </ul>
@@ -97,36 +93,75 @@
 			</div>
         </nav>
         <!-- /. NAV SIDE  -->
-        <div id="page-wrapper" >
+        <div id="page-wrapper">
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>대여목록</h2>
+                    <center><h2>대여등록</h2></center>
                     </div>
                 </div>
+                <br/><br/>
+
+				<div class="container">
+				  <form class="form-horizontal" role="form" action="/booksrentAdd" method='post'>
+				    <fieldset>
+			        <div class="form-group">
+				        <label class="col-sm-3 control-label" for="booksNumber">도서번호</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="booksNumber" id="booksNumber" placeholder="도서번호을 입력하세요">
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <label class="col-sm-3 control-label" for="membersNumber">회원번호</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="membersNumber" id="membersNumber" placeholder="회원번호를 입력하세요">
+				        </div>
+				      </div>
+              <div class="form-group">
+  							<label class="col-sm-3 control-label" for="booksRentStartDate">대여일</label>
+  							<div class="col-sm-7">
+  							  <input type="date" class="form-control" name="booksRentStartDate" id="booksRentStartDate"/>
+  							</div>
+  						</div>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label" for="booksRentEndDate">반납일</label>
+  							<div class="col-sm-7">
+  							  <input type="date" class="form-control" name="booksRentEndDate" id="booksRentEndDate"/>
+  							</div>
+  						</div>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label" for="booksRentPay">대여료</label>
+  							<div class="col-sm-7">
+  							  <input type="text" class="form-control" name="booksRentPay" id="booksRentPay" placeholder="선납금을 입력하세요"/>
+  							</div>
+  						</div>
+  						<div class="form-group">
+  							<label class="col-sm-3 control-label" for="booksDamage">파손여부</label>
+  							<div class="col-sm-7">
+  							  <label class="radio-inline">
+  							  	<input type="radio"  name="booksDamage" value="1"/>파손됨
+  							  </label>
+  							  <label class="radio-inline">
+  							  	<input type="radio"  name="booksDamage" value="0"/>멀쩡함
+  							  </label>
+  							</div>
+  						</div>
+  						<div class="form-group">
+				        <div class="col-sm-offset-3 col-sm-9">
+				          <input type="submit" class="btn btn-success" value="등록"/>
+				          <input type="reset" class="btn btn-success" value="다시입력"/>
+				        </div>
+				      </div>
+				    </fieldset>
+				  </form>
+				</div>
+                 <!-- /. ROW  -->
                 <hr />
-                <div class='container'>
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>대여번호</th>
-                          <th>도서명</th>
-                          <th>대여회원명</th>
-                          <th>대여일자</th>
-                        </tr>
-                      <tbody>
-                        <% for(var r in returnResult) {%>
-                        <tr>
-                          <td><%= returnResult[r].booksRentNumber %></td>
-                          <td><a href="/<%=returnResult[r].booksRentNumber%>"><%= returnResult[r].booksName %></a></td>
-                          <td><%= returnResult[r].membersName %></td>
-                          <td><%= returnResult[r].booksRentStartDate %></td>
-                        </tr>
-                        <%}%>
-                      </tbody>
-                </div>
-    		    </div>
+
+                 <!-- /. ROW  -->
+    		</div>
              <!-- /. PAGE INNER  -->
+
         </div>
         <!-- /. PAGE WRAPPER  -->
     </div>

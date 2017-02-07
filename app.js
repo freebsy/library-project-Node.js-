@@ -54,11 +54,22 @@ app.post('/bookAdd',function(req,res){
       res.redirect('/home');
   });
 });
-//booklist 주소로 겟 요청시 도서목록 view 화면을 보여줌
+//booklist 주소로 겟 요청시 도서목록,view 화면을 보여줌
 app.get('/bookList',function(req,res){
   var sql = 'SELECT * FROM books';
   conn.query(sql,function(err, booklistResult){
       res.render('bookList',{bookslist:booklistResult});
+  });
+});
+//get 요청 대출가능목록
+app.get('/bookRentPossible',function(req,res){
+  var sql = 'SELECT * FROM books WHERE booksLendingPossible=1'
+  conn.query(sql, function(err, bookRentResult){
+    if(err){
+      res.send('대출가능목록 불러오기 실패!'+err);
+    }else{
+      res.render('bookList',{bookslist:bookRentResult});
+    }
   });
 });
 //get 요청 도서 정보 수정
@@ -123,6 +134,58 @@ app.post('/bookModify',function(req,res){
           res.redirect('/bookList');
         };
       });
+    }
+  });
+});
+
+//get 요청 도서대여등록
+app.get('/bookRentAdd',function(req,res){
+  res.render('bookRentAdd');
+});
+
+//post 요청 도서대여등록
+app.post('/booksrentAdd',function(req,res){
+  var statement = [
+      req.body.booksNumber, req.body.membersNumber, req.body.booksRentStartDate,
+      req.body.booksRentEndDate, req.body.booksRentPay, req.body.booksDamage,'0'
+  ];
+  var sql = 'INSERT INTO booksrent(booksNumber,membersNumber,booksRentStartDate,'
+  +'booksRentEndDate,booksRentPay,booksDamage,booksRentBack) VALUES(?,?,?,?,?,?,?)';
+  conn.query(sql, statement, function(err, rentResult){
+    if(err){
+      console.log(err);
+      res.send('도서대여등록이 되지 않았습니다. 다시 확인하세요!'+err);
+    }else{
+      sql = 'SELECT firstRentDay FROM books WHERE booksNumber=?';
+      conn.query(sql,[req.body.booksNumber], function(err,rentResult){
+        if(err){
+          console.log(err);
+          res.sed('error!')
+        }else if(rentResult[0].firstRentDay == null){
+          sql = 'UPDATE books SET firstRentDay=? WHERE booksNumber=?'
+          conn.query(sql,[req.body.booksRentStartDate,req.body.booksNumber],function(err,rentResult){
+            if(err){
+              console.log(err);
+              res.send('최초대여일 등록실패!');
+            }else{
+              res.redirect('/home');
+            }
+          });
+        }else{
+          res.redirect('/home');
+        }
+      });
+    }
+  });
+});
+app.get('/bookRentReturnList', function(req,res){
+  var sql = 'SELECT * FROM booksrent WHERE booksRentNumber = ?';
+  conn.query(sql, function(err, returnResult){
+    if(err){
+      console.log(err);
+      res.send('대여정보를 불러오지 못하였습니다'+err);
+    }else{
+      res.render('bookRentModify',{returnResult:returnResult})
     }
   });
 });
