@@ -1,5 +1,7 @@
+var session = require('express-session');
 var express = require('express');// express 모듈을 가져와 express 변수에 담아줌
 var bodyParser = require('body-parser'); // body-parser모듈을 bodyParser변수에담아줌
+
 var ejs = require('ejs')
 
 var app = express() // express 함수 리턴값을 app 변수에 담아줌
@@ -12,6 +14,15 @@ var conn = mysql.createConnection({
   database : 'library'
 });
 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(function(req, res, next){
+  res.locals.user = req.session.level;
+  next();
+});
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname+'/public'));
@@ -37,21 +48,33 @@ app.get('/bookAdd',function(req,res){
 });
 //post 요청 도서등록
 app.post('/bookAdd',function(req,res){
-  var statement = [
-    req.body.booksName,req.body.booksMade,req.body.bookskindsNumber,req.body.booksAuthor,
-    req.body.booksLendingPossible,
-    req.body.booksLendingDay,req.body.booksLendingCount,req.body.booksDamage,
-    req.body.libraryNumber
-  ]
-  var sql = 'INSERT INTO books'
-    +'(booksName,booksMade,bookskindsNumber,booksAuthor,booksLendingPossible,'
-    +'booksLendingDay,booksLendingCount,booksDamage,libraryNumber)'
-    +' VALUES(?,?,?,?,?,?,?,?,?)';
-  conn.query(sql, statement, function(err, bookadd){
-    if(err){
-      res.send("애러 : "+err);
+  var libNum = req.body.libraryNumber;
+  var sql = 'SELECT localNumber FROM library WHERE libraryNumber=?';
+  var localNum = '';
+   // 지역번호 구하기
+   conn.query(sql,[libNum],function(err, localNum){
+     if(err){
+       res.send('지역번호를 찾을수 없습니다:'+err);
+     }else {
+      console.log(localNum[0].localNumber);
+        var sql = 'INSERT INTO books'
+        +'(booksName,booksMade,bookskindsNumber,booksAuthor,booksLendingPossible,'
+        +'booksLendingDay,booksLendingCount,booksDamage,libraryNumber,localNumber)'
+        +' VALUES(?,?,?,?,?,?,?,?,?,?)';
+        var statement = [
+          req.body.booksName,req.body.booksMade,req.body.bookskindsNumber,req.body.booksAuthor,
+          req.body.booksLendingPossible,
+          req.body.booksLendingDay,req.body.booksLendingCount,req.body.booksDamage,
+          req.body.libraryNumber,localNum[0].localNumber
+        ];
+        conn.query(sql, statement, function(err,bookadd){
+     if(err){
+      res.send("에러 : "+err);
+    }else{
+      res.redirect('/bookList');
+        };
+      });
     }
-      res.redirect('/home');
   });
 });
 //booklist 주소로 겟 요청시 도서목록,view 화면을 보여줌
@@ -189,15 +212,188 @@ app.get('/bookRentList', function(req,res){
   conn.query(sql, function(err, rentList){
     if(err){
       console.log(err);
-      res.send('반납목록 불러오기 실패'+err);
+      res.send('반납목록 불러오지 못하였습니다.'+err);
     }else{
       res.render('bookRentList',{rentList:rentList})
     }
   });
 });
-//post 요청 반납처리-- 대여정보 및 대여일수, 파손 정보 수정. 트랜잭션추가
-app.post
+// get 요청 반납처리 수정view 이동
+app.get('/bookRentModify/:id', function(req,res){
+  var rentNumber = parseInt(req.params.id);
+  var sql = 'SELECT * FROM booksrent WHERE booksRentNumber = ?';
+  conn.query(sql,[rentNumber],function(err,bookRentList){
+    if(err){
+      console.log(err);
+      res.send('대여정보를 불러오지 못하였습니다'+err);
+    }else{
+      res.render('bookRentModify',{bookRentList:bookRentList});
+    }
+  });
+});
 
+//post 요청 반납처리-- 대여정보 및 대여일수, 파손 정보 수정. 트랜잭션추가
+app.post('/bookRentModify', function(req,res){
+  var statement =[
+    req.body.booksRentEndDate, req.body.booksRentPay,req.body.booksDamage,
+    req.body.bookstotalRentDay,'1',req.body.booksRentNumber];
+  var sql = 'UPDATE booksrent SET booksRentEndDate=?, booksRentPay=?,'
+  +'booksDamage=?,bookstotalRentDay=?,booksRentBack=? WHERE booksRentNumber=?';
+  conn.query(sql,statement,function(err,bookResult){
+    if(err){
+      console.log(err);
+      res.send("반납처리등록을 하지 못하였습니다.."+err);
+    }else{
+      sql = 'SELECT * FROM books WHERE booksNumber=?';
+      conn.query(sql,[req.body.booksNumber],function(err,bookRentResult){
+        if(err){
+          console.log(err);
+          res.send('반납처리 도서정보를 불러오지 못하였습니다'+err);
+        }else if(req.body.booksDamage === '0'){// 도서 파손이 없는 상태
+          sql = 'UPDATE books SET booksLendingPossible=?, booksLendingCount=?,'
+                +'booksLendingDay=? WHERE booksNumber = ?';
+          var totalCount = bookRentResult[0].booksLendingCount + 1 ;
+          var totalRentDay = bookRentResult[0].booksLendingDay + parseInt(req.body.bookstotalRentDay);
+          statement = ['1', totalCount, totalRentDay, req.body.booksNumber];
+          conn.query(sql,statement, function(err,bookRentModifyResult){
+            if(err){
+                res.send('반납 처리를 실패하였습니다'+err);
+            }else{
+              res.redirect('/home');
+            }
+          });
+      }else if(req.body.booksDamage == '1'){ //도서 파손이 있는 상태
+          sql = 'UPDATE books SET booksLendingPossible=?, booksLendingCount=?,'
+          +' booksLendingDay=?,booksDamage=?, booksDmageDate=? WHERE booksNumber =?';
+          var totalCount = bookRentResult[0].booksLendingCount + 1 ;
+          var totalRentDay = bookRentResult[0].booksLendingDay + parseInt(req.body.bookstotalRentDay);
+          console.log(totalCount,totalRentDay);
+          statement = [
+            '1', totalCount, totalRentDay, '1', req.body.booksDmageDate,req.body.booksNumber
+          ];
+          conn.query(sql, statement, function(err,bookRentModifyResult ){
+            if(err){
+              console.log(err);
+              res.send('반납 처리를 실패하였습니다'+err);
+            }else{
+              res.redirect('/home');
+            }
+          });
+        }
+      });
+    }
+  });
+});
+//get 요청 도서관 회원등록
+app.get('/memberAdd',function(req,res){
+  var sql = 'SELECT * FROM local';
+  conn.query(sql,function(err,localNum){
+    if(err){
+      res.send("회원등록 실패"+err)
+    }else{
+      sql = "SELECT * FROM library";
+      conn.query(sql,function(err,libraryResult){
+        res.render('memberAddForm',{'localNum':localNum,'libraryResult':libraryResult});
+      });
+    }
+  });
+});
+//post 요청 도서관 회원등록
+app.post('/memberAdd',function(req,res){
+var libNum = req.body.libraryNumber;
+var sql = 'SELECT localNumber FROM library WHERE libraryNumber=?';
+var localNum = '';
+// 지역번호 구하기
+conn.query(sql,[libNum],function(err, localNum){
+  if(err){
+    res.send('지역번호를 찾을수 없습니다:'+err);
+  }else{
+    console.log(localNum[0].localNumber);
+    var sql = 'INSERT INTO members(localNumber,libraryNumber,membersName,membersTel,'
+    +'membersAddr,membersRRN,membersVIP) VALUES(?,?,?,?,?,?,?)';
+    var rrn = req.body.membersRRN + req.body.membersBackRRN;
+    var statement = [
+      localNum[0].localNumber,req.body.libraryNumber, req.body.membersName,
+      req.body.membersTel,req.body.membersAddr,rrn,req.body.membersVIP
+      ];
+      conn.query(sql, statement, function(err, memberAdd){
+        if(err){
+            res.send('회원등록 실패'+err);
+        }else{
+          res.redirect('/home');
+        };
+      });
+    }
+  });
+});
+//get 요청 도서관 관리자(admin) 등록
+app.get('/adminAdd',function(req,res){
+    var sql = 'SELECT * FROM local';
+    conn.query(sql,function(err,localNum){
+      if(err){
+        res.send("관리자 등록 실패"+err)
+      }else{
+        sql = "SELECT * FROM library";
+        conn.query(sql,function(err,libraryResult){
+          res.render('adminAddForm',{'localNum':localNum,'libraryResult':libraryResult});
+        });
+      }
+    });
+  });
+//post 요청 도서관 관리자(admin) 등록
+  app.post('/adminAdd', function(req,res){
+    var libNum = req.body.libraryNumber;
+    var sql = 'SELECT localNumber FROM library WHERE libraryNumber=?';
+    var localNum = '';
+    //지역번호 구하기
+    conn.query(sql,[libNum],function(err,localNum){
+      if(err){
+        res.send('지역번호를 찾을수 없습니다:'+err);
+      }else{
+        console.log(localNum[0].localNumber);
+        var sql = 'INSERT INTO admin(adminId,localNumber,libraryNumber,'
+        +'adminPassword,adminName,adminRRN,adminAddr,adminTel) VALUES(?,?,?,?,?,?,?,?)';
+        var rrn = req.body.adminRRN + req.body.adminBackRRN ;
+        var statement = [
+          req.body.adminId,localNum[0].localNumber,req.body.libraryNumber,
+          req.body.adminPassword,req.body.adminName,rrn,req.body.adminAddr,
+          req.body.adminTel];
+        conn.query(sql, statement, function(err,adminAdd){
+          if(err){
+            res.send('관리자등록 실패'+err);
+          }else{
+            res.redirect('/home');
+          }
+        });
+      }
+    });
+  });
+  // get 요청 로그아웃 처리
+  app.get('/logout', function(req,res){
+      delete req.session.level;
+      res.redirect('/home');
+  });
+  //post요청 로그인처리
+  app.post('/login',function(req,res){
+      var id = req.body.adminId;
+      var pw = req.body.adminPassword;
+      var sql = 'SELECT * FROM admin WHERE adminId=?';
+      conn.query(sql,[id], function(err,loginResult){
+        console.log(loginResult[0].adminPassword);
+        if(err){
+          res.send('로그인체크에러!'+err);
+        }else if(loginResult[0].adminPassword){
+          if(loginResult[0].adminPassword == pw){
+            req.session.level = 'admin';
+            res.redirect('/home');
+          }else{
+            res.send('비밀번호가 일치하지 않습니다.<br/>>br/><a href="/home">HOME</a>');
+          }
+        }else{
+          res.send('ID가 일치하지 않습니다<br/>>br/><a href="/home">HOME</a>');
+        }
+      });
+  });
 app.listen('3000',function(){
     console.log('3000 접속성공!')
 });

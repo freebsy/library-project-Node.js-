@@ -26,12 +26,39 @@
                     </button>
                 </div>
                 <a class="navbar-brand" href="#"><i class="fa fa-square-o "></i>&nbsp;Library</a>
-
+                <% if(user == null){%>
+                  <div class="navbar-collapse collapse">
+                    <form action="/login" method="post">
+                     <ul class="nav navbar-nav navbar-right">
+                    	<li>ID<input type="text" name="adminId"/></li>
+        							<li>PW<input type="text" name="adminPassword"/></li>
+        							<li><input type="submit" value="로그인"/></li>
+                     </ul>
+                   </form>
+                 </div>
+                 <nav class="navbar-default navbar-side" role="navigation">
+                     <div class="sidebar-collapse">
+                         <ul class="nav" id="main-menu">
+                             <li class="text-center user-image-back">
+                 				        <img src="/assets/img/book2.jpg" width="250px" height="128px" />
+                             </li>
+                             <li>
+                                 <a href="#"><i class="fa fa-edit "></i>회원관리<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+                                     <li>
+                                         <a href="/adminAdd">관리자등록</a>
+                                     </li>
+                                 </ul>
+                             </li>
+                         </ul>
+                     </div>
+                 </nav>
+                <%}else if(user == 'admin'){%>
                   <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/home">HOME</a></li>
                         <li><a href="#">사이트맵</a></li>
-                        <li><a href="/admin/logout">로그아웃</a></li>
+                        <li><a href="/logout">로그아웃</a></li>
                     </ul>
                   </div>
               </div>
@@ -82,7 +109,7 @@
                 </ul>
 			      </div>
         </nav>
-
+        <%}%>
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
             <div id="page-inner">

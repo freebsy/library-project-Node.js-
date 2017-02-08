@@ -41,9 +41,9 @@
 
 				        <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/">HOME</a></li>
+                        <li><a href="/home">HOME</a></li>
                         <li><a href="#">사이트맵</a></li>
-                        <li><a href="/admin/logout">로그아웃</a></li>
+                        <li><a href="/logout">로그아웃</a></li>
                     </ul>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                         <% for(var r in rentList) {%>
                         <tr>
                           <td><%= rentList[r].booksRentNumber %></td>
-                          <td><a href="/<%=rentList[r].booksRentNumber%>"><%= rentList[r].booksName %></a></td>
+                          <td><a href="/bookRentModify/<%=rentList[r].booksRentNumber%>"><%= rentList[r].booksName %></a></td>
                           <td><%= rentList[r].membersName %></td>
                           <td><%= rentList[r].booksRentStartDate %></td>
                         </tr>

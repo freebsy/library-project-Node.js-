@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LIBRARY</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="/assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="/assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<body>
+  <div id="wrapper">
+     <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="adjust-nav">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+
+        <a class="navbar-brand" href="#"><i class="fa fa-square-o "></i>&nbsp;Library</a>
+        <% if(user == null){%>
+            <div class="navbar-collapse collapse">
+              <form action="/login" method="post">
+               <ul class="nav navbar-nav navbar-right">
+                <li>ID<input type="text" name="adminId"/></li>
+                <li>PW<input type="text" name="adminPw"/></li>
+                <li><input type="submit" value="로그인"/></li>
+               </ul>
+             </form>
+           </div>
+           <nav class="navbar-default navbar-side" role="navigation">
+               <div class="sidebar-collapse">
+                   <ul class="nav" id="main-menu">
+                       <li class="text-center user-image-back">
+                          <img src="/assets/img/book2.jpg" width="250px" height="128px" />
+                       </li>
+                       <li>
+                           <a href="#"><i class="fa fa-sitemap "></i>회원관리<span class="fa arrow"></span></a>
+                           <ul class="nav nav-second-level">
+                               <li>
+                                   <a href="/adminAdd">관리자등록</a>
+                               </li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+           </nav>
+          <%}else if(user == 'admin'){%>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/home">HOME</a></li>
+                <li><a href="#">사이트맵</a></li>
+                <li><a href="/logout">로그아웃</a></li>
+            </ul>
+        </div>
+      </div>
+  </div>
+        <!-- /. NAV TOP  -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+                <li class="text-center user-image-back">
+    				<img src="assets/img/find_user.png" class="img-responsive" />
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-edit "></i>도서관리<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="/bookAdd">도서등록</a>
+                        </li>
+                        <li>
+                            <a href="/bookList">도서목록</a>
+                        </li>
+                        <li>
+                            <a href="/bookRentPossible">대출가능목록</a>
+                        </li>
+                        <li>
+                           <a href="#">대출관리<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                              <li>
+                                <a href="/bookRentAdd">등록</a>
+                              </li>
+                              <li>
+                                <a href="/bookRentList">반납</a>
+                              </li>
+                          </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-sitemap "></i>회원관리<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="/memberAdd">회원등록</a>
+                        </li>
+                        <li>
+                            <a href="/adminAdd">관리자등록</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+			    </div>
+        </nav>
+        <%}%>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                    <center><h2>관리자등록</h2></center>
+                    </div>
+                </div>
+                <br/><br/>
+				<div class="container">
+				  <form class="form-horizontal" role="form" action="/adminAdd" method="post">
+				    <fieldset>
+				  	  <div class="form-group">
+				        <label class="col-sm-3 control-label" for="adminId">아이디</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="adminId" id="adminId" placeholder="아이디를 입력하세요">
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <label class="col-sm-3 control-label" for="adminName">이름</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="adminName" id="adminName" placeholder="이름을 입력하세요">
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <label class="col-sm-3 control-label" for="adminPassword">비밀번호</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="adminPassword" id="adminPassword" placeholder="비밀번호을 입력하세요">
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <label class="col-sm-3 control-label" for="adminRRN">주민번호</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="adminRRN" id="adminRRN" placeholder="앞6자리">-<input type="text" class="form-control" name="adminBackRRN" id="adminBackRRN" placeholder="뒤7자리">
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <label class="col-sm-3 control-label" for="adminAddr">주소</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="adminAddr" id="adminAddr" placeholder="주소를 입력하세요">
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <label class="col-sm-3 control-label" for="adminTel">연락처</label>
+				        <div class="col-sm-7">
+				          <input type="text" class="form-control" name="adminTel" id="adminTel" placeholder="-빼고 휴대폰번호 11자리를 입력하세요">
+				        </div>
+				      </div>
+				      <div class="form-group">
+						<label class="col-sm-3 control-label" for="libraryNumber">도서관분류</label>
+				        <div class="col-sm-9">
+				          <div class="row">
+				        	<div class="col-xs-3">
+				              <select class="form-control" name="libraryNumber">
+				              	<option>--도서관선택--</option>
+                        <% for(var l in libraryResult){%>
+				                <option value="<%= libraryResult[l].libraryNumber %>"><%= libraryResult[l].libraryName %></option>
+                        <%}%>
+				              </select>
+				            </div>
+				          </div>
+				        </div>
+				      </div>
+				      <div class="form-group">
+				        <div class="col-sm-offset-3 col-sm-9">
+				          <input type="submit" class="btn btn-success" value="등록"/>
+				          <input type="reset" class="btn btn-success" value="다시입력"/>
+				        </div>
+				      </div>
+				    </fieldset>
+				  </form>
+				</div>
+                 <!-- /. ROW  -->
+                <hr />
+
+                 <!-- /. ROW  -->
+    		</div>
+             <!-- /. PAGE INNER  -->
+
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="/assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/assets/js/jquery.metisMenu.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="/assets/js/custom.js"></script>
+
+
+</body>
+</html>

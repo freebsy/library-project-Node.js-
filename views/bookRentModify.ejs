@@ -39,7 +39,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/home">HOME</a></li>
                         <li><a href="#">사이트맵</a></li>
-                        <li><a href="/admin/logout">로그아웃</a></li>
+                        <li><a href="/logout">로그아웃</a></li>
                     </ul>
                 </div>
             </div>
@@ -103,30 +103,30 @@
                 <br/><br/>
 
 				<div class="container">
-				  <form class="form-horizontal" role="form" action="/rent/modify" method='post'>
+				  <form class="form-horizontal" role="form" action="/bookRentModify" method='post'>
 				    <fieldset>
               <div class="form-group">
 				        <label class="col-sm-3 control-label" for="booksRentNumber">대여번호</label>
 				        <div class="col-sm-7">
-				          <input type="text" class="form-control" value="<%=rentList[0].booksRentNumber%>" name="booksRentNumber" id="booksRentNumber" readonly="readonly" />
+				          <input type="text" class="form-control" value="<%=bookRentList[0].booksRentNumber%>" name="booksRentNumber" id="booksRentNumber" readonly="readonly" />
 				        </div>
 				      </div>
 			        <div class="form-group">
 				        <label class="col-sm-3 control-label" for="booksNumber">도서번호</label>
 				        <div class="col-sm-7">
-				          <input type="text" class="form-control" value="<%=rentList[0].booksNumber%>" name="booksNumber" id="booksNumber" readonly="readonly" />
+				          <input type="text" class="form-control" value="<%=bookRentList[0].booksNumber%>" name="booksNumber" id="booksNumber" readonly="readonly" />
 				        </div>
 				      </div>
 				      <div class="form-group">
 				        <label class="col-sm-3 control-label" for="membersNumber">회원번호</label>
 				        <div class="col-sm-7">
-				          <input type="text" class="form-control" value="<%=rentList[0].membersNumber%>" readonly="readonly" name="membersNumber" id="membersNumber" placeholder="회원번호를 입력하세요">
+				          <input type="text" class="form-control" value="<%=bookRentList[0].membersNumber%>" readonly="readonly" name="membersNumber" id="membersNumber" placeholder="회원번호를 입력하세요">
 				        </div>
 				      </div>
               <div class="form-group">
   							<label class="col-sm-3 control-label" for="booksRentStartDate">대여일</label>
   							<div class="col-sm-7">
-  							  <input type="text" class="form-control" value="<%=rentList[0].booksRentStartDate%>" readonly="readonly" name="booksRentStartDate" id="startDay"/>
+  							  <input type="text" class="form-control" value="<%=bookRentList[0].booksRentStartDate%>" readonly="readonly" name="booksRentStartDate" id="startDay"/>
   							</div>
   						</div>
   						<div class="form-group">
@@ -138,7 +138,7 @@
   						<div class="form-group">
   							<label class="col-sm-3 control-label" for="booksRentPay">대여료</label>
   							<div class="col-sm-7">
-  							  <input type="text" class="form-control" value="<%=rentList[0].booksRentPay%>" name="booksRentPay" id="rentPay" placeholder="선납금을 입력하세요"/>
+  							  <input type="text" class="form-control" value="<%=bookRentList[0].booksRentPay%>" name="booksRentPay" id="booksRentPay" placeholder="선납금을 입력하세요"/>
   							</div>
   						</div>
               <div class="form-group">
