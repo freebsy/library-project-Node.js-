@@ -75,7 +75,7 @@
                 										<a href="/bookRentAdd">등록</a>
                 									</li>
                 									<li>
-                										<a href="/bookRentReturnList">반납</a>
+                										<a href="/bookRentList">반납</a>
                 									</li>
                             	</ul>
                             </li>
@@ -115,12 +115,12 @@
                           <th>대여일자</th>
                         </tr>
                       <tbody>
-                        <% for(var r in returnResult) {%>
+                        <% for(var r in rentList) {%>
                         <tr>
-                          <td><%= returnResult[r].booksRentNumber %></td>
-                          <td><a href="/<%=returnResult[r].booksRentNumber%>"><%= returnResult[r].booksName %></a></td>
-                          <td><%= returnResult[r].membersName %></td>
-                          <td><%= returnResult[r].booksRentStartDate %></td>
+                          <td><%= rentList[r].booksRentNumber %></td>
+                          <td><a href="/<%=rentList[r].booksRentNumber%>"><%= rentList[r].booksName %></a></td>
+                          <td><%= rentList[r].membersName %></td>
+                          <td><%= rentList[r].booksRentStartDate %></td>
                         </tr>
                         <%}%>
                       </tbody>

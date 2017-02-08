@@ -178,17 +178,25 @@ app.post('/booksrentAdd',function(req,res){
     }
   });
 });
-app.get('/bookRentReturnList', function(req,res){
-  var sql = 'SELECT * FROM booksrent WHERE booksRentNumber = ?';
-  conn.query(sql, function(err, returnResult){
+//get 요청 반납처리 리스트
+app.get('/bookRentList', function(req,res){
+  var sql = 'SELECT booksrent.*, members.membersNumber, books.booksName'
+  +' FROM booksrent LEFT JOIN members'
+  +' ON booksrent.membersNumber = members.membersNumber'
+  +' LEFT JOIN books'
+  +' ON booksrent.booksNumber = books.booksNumber'
+  +' WHERE booksrent.booksRentBack = "0"';
+  conn.query(sql, function(err, rentList){
     if(err){
       console.log(err);
-      res.send('대여정보를 불러오지 못하였습니다'+err);
+      res.send('반납목록 불러오기 실패'+err);
     }else{
-      res.render('bookRentModify',{returnResult:returnResult})
+      res.render('bookRentList',{rentList:rentList})
     }
   });
 });
+//post 요청 반납처리-- 대여정보 및 대여일수, 파손 정보 수정. 트랜잭션추가
+app.post
 
 app.listen('3000',function(){
     console.log('3000 접속성공!')
