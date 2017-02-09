@@ -1,8 +1,8 @@
-var session = require('express-session');
+var session = require('express-session');//세션 모듈 사용하기위해 불러온다.
 var express = require('express');// express 모듈을 가져와 express 변수에 담아줌
 var bodyParser = require('body-parser'); // body-parser모듈을 bodyParser변수에담아줌
 
-var ejs = require('ejs')
+var ejs = require('ejs') //ejs 모듈을 사용하기위해 불러온다.
 
 var app = express() // express 함수 리턴값을 app 변수에 담아줌
 
@@ -14,11 +14,13 @@ var conn = mysql.createConnection({
   database : 'library'
 });
 
+//세션을 사용하기위한 선언
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
 }));
+
 app.use(function(req, res, next){
   res.locals.user = req.session.level;
   next();
@@ -232,7 +234,7 @@ app.get('/bookRentModify/:id', function(req,res){
   });
 });
 
-//post 요청 반납처리-- 대여정보 및 대여일수, 파손 정보 수정. 트랜잭션추가
+//post 요청 반납처리-- 대여정보 및 대여일수, 파손 정보 수정.
 app.post('/bookRentModify', function(req,res){
   var statement =[
     req.body.booksRentEndDate, req.body.booksRentPay,req.body.booksDamage,
